@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -19,20 +19,23 @@ const productSchema = new mongoose.Schema({
   },
   Remaining_quantity: {
     type: Number,
-    required: true,
   },
-  imageUrl: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  manager: {
+  // image_url: {
+  //   type: String,
+  //   required: true,
+  // },
+
+  manager_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "user",
+    required: true,
   },
+  category_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "category",
+    required: true,
+  },
+  deleted: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model("product", ProductSchema);

@@ -1,15 +1,17 @@
 const mongoose = require("mongoose");
+const Feedback = require("./Feedback");
 
-const orderSchema = new mongoose.Schema({
-  customer: {
+const OrderSchema = new mongoose.Schema({
+  customer_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "user",
   },
   products: [
     {
-      product: {
+      product_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "product",
+        required: true,
       },
       quantity: {
         type: Number,
@@ -17,13 +19,25 @@ const orderSchema = new mongoose.Schema({
       },
     },
   ],
-  feedback: {
-    type: String,
-  },
   status: {
-    enum: ["pending", "checkout", "completed"],
+    type: String,
+    enum: ["pending", "checkedOut", "completed"],
     default: "pending",
   },
+  address: {
+    type: String,
+    default: null,
+  },
+  deleted: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+OrderSchema.virtual("feedback", {
+  ref: Feedback,
+  foreignField: "order_id",
+  localField: "_id",
+});
+
+OrderSchema.set("toObject", { virtuals: true });
+OrderSchema.set("toJSON", { virtuals: true });
+
+module.exports = mongoose.model("order", OrderSchema);

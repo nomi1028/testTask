@@ -3,7 +3,6 @@ require("dotenv/config");
 const JWT = require("jsonwebtoken");
 
 const GenerateToken = (user) => {
-  console.log(user);
   const token = JWT.sign(
     {
       _id: user._id,
@@ -12,7 +11,7 @@ const GenerateToken = (user) => {
       email: user.email,
       phone_number: user.phone_number,
     },
-    process.env.EMAIL_ACTIVATE_TOKEN,
+    process.env.SECRET_KEY,
     { expiresIn: "1h" },
     { algorithm: "RS256" }
   );

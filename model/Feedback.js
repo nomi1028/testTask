@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const FeedbackSchema = new mongoose.Schema({
-  customer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+  customer: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  product: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+  order_id: { type: mongoose.Schema.Types.ObjectId, ref: "order" },
   rating: Number,
   comment: String,
 });
-const Feedback = mongoose.model("Feedback", FeedbackSchema);
+
+module.exports = mongoose.model("feedback", FeedbackSchema);
