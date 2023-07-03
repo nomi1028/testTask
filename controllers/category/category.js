@@ -18,7 +18,7 @@ exports.addCategory = async (req, res) => {
       .status(200)
       .json({ data: category, message: "category added successfully" });
   } catch (err) {
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.getCategory = async (req, res) => {
@@ -31,6 +31,6 @@ exports.getCategory = async (req, res) => {
       .status(200)
       .json({ data: category, message: "list of all categories " });
   } catch (err) {
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };

@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
   phone_number: {
     type: String,
     required: true,
+    default: null,
   },
   block: {
     type: Boolean,

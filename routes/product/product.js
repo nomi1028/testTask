@@ -10,9 +10,12 @@ const {
   restokeProductById,
 } = require("../../controllers/product/product");
 const auth = require("../../middleware/checkauth");
-router.route("/addProduct").post(auth, addProduct);
+const checkManager = require("../../middleware/checkManager");
+router.route("/addProduct").post(auth, checkManager, addProduct);
 router.route("/getProduct/:id").post(auth, getProductById);
 router.route("/getAllProduct").post(auth, getAllProduct);
-router.route("/UpdateProduct/:id").post(auth, updateProductById);
-router.route("/restokeProduct/:id").post(auth, restokeProductById);
+router.route("/UpdateProduct/:id").post(auth, checkManager, updateProductById);
+router
+  .route("/restokeProduct/:id")
+  .post(auth, checkManager, restokeProductById);
 module.exports = router;

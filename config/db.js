@@ -6,10 +6,10 @@ const connectDB = async () => {
   );
 
   mongoose.connection.on("error", (err) => {
-    console.log("not connected");
+    console.log("DB not connected");
   });
   mongoose.connection.on("connected", (connected) => {
-    console.log("yes connected");
+    console.log("DB connected");
   });
 };
 

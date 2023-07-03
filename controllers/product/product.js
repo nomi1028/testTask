@@ -12,7 +12,8 @@ exports.addProduct = async (req, res) => {
       !req.body.quantity
     )
       return res.status(400).json({
-        msg: "name & category_id && manager_id && price && quantity are required parameters for request",
+        message:
+          "name & category_id && manager_id && price && quantity are required parameters for request",
       });
     let checkProduct = await Product.findOne({
       name: req.body.name,
@@ -33,14 +34,6 @@ exports.addProduct = async (req, res) => {
       });
     }
 
-    let checkManager = await User.findOne({
-      _id: req.body.manager_id,
-      role: "manager",
-    });
-
-    if (!checkManager)
-      return res.status(200).json({ message: "only Manager add Product" });
-
     let product = Product.create({
       name: req.body.name,
       description: req.body.description,
@@ -55,7 +48,7 @@ exports.addProduct = async (req, res) => {
       .status(200)
       .json({ data: product, message: "Product added successfully" });
   } catch (err) {
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.getAllProduct = async (req, res) => {
@@ -68,7 +61,7 @@ exports.getAllProduct = async (req, res) => {
       .status(200)
       .json({ data: product, message: "list of all product " });
   } catch (err) {
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.getProductById = async (req, res) => {
@@ -80,13 +73,13 @@ exports.getProductById = async (req, res) => {
     if (!product)
       return res
         .status(404)
-        .json({ msg: `no Product exists against id: ${req.params.id}` });
+        .json({ message: `no Product exists against id: ${req.params.id}` });
     return res.status(200).json({
       data: product,
       message: `Product against this id: ${req.params.id} `,
     });
   } catch (err) {
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.updateProductById = async (req, res) => {
@@ -102,7 +95,8 @@ exports.updateProductById = async (req, res) => {
       !req.body.quantity
     ) {
       return res.status(400).json({
-        msg: "name, category_id, manager_id, price, and quantity are required parameters for the request",
+        message:
+          "name, category_id, manager_id, price, and quantity are required parameters for the request",
       });
     }
 
@@ -168,7 +162,7 @@ exports.updateProductById = async (req, res) => {
       .json({ data: product, message: "Product updated successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.restokeProductById = async (req, res) => {
@@ -184,7 +178,8 @@ exports.restokeProductById = async (req, res) => {
       !req.body.quantity
     ) {
       return res.status(400).json({
-        msg: "name, category_id, manager_id, price, and quantity are required parameters for the request",
+        message:
+          "name, category_id, manager_id, price, and quantity are required parameters for the request",
       });
     }
 
@@ -197,18 +192,6 @@ exports.restokeProductById = async (req, res) => {
     }
 
     // Check if the name is already taken by another product
-    if (product.name !== req.body.name) {
-      let checkProduct = await Product.findOne({
-        name: req.body.name,
-        deleted: false,
-      });
-
-      if (checkProduct) {
-        return res.status(400).json({
-          message: `Product with the name ${req.body.name} already exists`,
-        });
-      }
-    }
 
     // Check if the category exists
     let checkCategory = await Category.findOne({
@@ -243,6 +226,6 @@ exports.restokeProductById = async (req, res) => {
       .json({ data: product, message: "Product restoke successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };

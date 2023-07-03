@@ -10,7 +10,9 @@ const Order = require("../../model/Order");
 exports.addOrder = async (req, res) => {
   try {
     if (!req.body.customer_id || !req.body.products)
-      return res.status(400).json({ message: "customer_id, products " });
+      return res
+        .status(400)
+        .json({ message: "customer Id and  products require" });
 
     let products = JSON.parse(req.body.products);
 
@@ -20,7 +22,7 @@ exports.addOrder = async (req, res) => {
       });
       if (!checkProduct)
         return res.status(404).json({
-          msg: `no product exists against id: ${product.service_id}`,
+          message: `no product exists against id: ${product.service_id}`,
         });
     }
 
@@ -83,11 +85,11 @@ exports.addOrder = async (req, res) => {
         }
         return res
           .status(200)
-          .json({ msg: `cart updated successfully`, data: updatedBooking });
+          .json({ message: `cart updated successfully`, data: updatedBooking });
       }
     );
   } catch (err) {
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.getallOrder = async (req, res) => {
@@ -104,7 +106,7 @@ exports.getallOrder = async (req, res) => {
     return res.status(200).json({ message: "All Order List", data: orderList });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.getallOrderofMananger = async (req, res) => {
@@ -145,7 +147,7 @@ exports.getallOrderofMananger = async (req, res) => {
       .json({ message: "Orders by Manager ID", data: orders });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.getallOrderofCustomer = async (req, res) => {
@@ -160,7 +162,7 @@ exports.getallOrderofCustomer = async (req, res) => {
       .json({ message: "Orders by Customer ID", data: orders });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 exports.removeProduct = async (req, res) => {
@@ -168,7 +170,7 @@ exports.removeProduct = async (req, res) => {
     if (!req.body.customer_id || !req.body.product_id)
       return res
         .status(400)
-        .json({ msg: "customerID & productId are required" });
+        .json({ message: "customerID & productId are required" });
 
     let booking = await Order.findOne({
       customer_id: req.body.customer_id,
@@ -176,14 +178,14 @@ exports.removeProduct = async (req, res) => {
     });
     if (!booking)
       return res.status(404).json({
-        msg: "no order exists against user id:" + req.body.customer_id,
+        message: "no order exists against user id:" + req.body.customer_id,
       });
     let product = booking.products.find(
       (x) => x._id.toString() == req.body.product_id.toString()
     );
     if (!product)
       return res.status(404).json({
-        msg: "no product exists against id: " + req.body.product_id,
+        message: "no product exists against id: " + req.body.product_id,
       });
 
     Order.findOneAndUpdate(
@@ -196,16 +198,16 @@ exports.removeProduct = async (req, res) => {
         if (err)
           return res
             .status(500)
-            .json({ msg: `error occurred while updating cart` });
+            .json({ message: `error occurred while updating cart` });
         // await updatedBooking;
         return res.status(200).json({
-          msg: `item removed from cart successfully`,
+          message: `item removed from cart successfully`,
           data: updatedBooking,
         });
       }
     );
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
