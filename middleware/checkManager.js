@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const user = jwt.decode(token);
 
-    if (user.role == "manager" && user._id == req.body.managerId) {
+    if (user.role == "manager" && user._id == req.body.manager_id) {
       next();
     } else {
       return res.status(401).json({

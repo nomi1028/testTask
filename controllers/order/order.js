@@ -57,6 +57,22 @@ exports.addOrder = async (req, res) => {
                 `,
             },
           ];
+          for (const orderProduct of updatedBooking.products) {
+            let product = await Product.findById(orderProduct.product_id);
+
+            // Check if the product exists
+            if (!product) {
+              return res
+                .status(404)
+                .json({ message: "Product is not available" });
+            }
+
+            product.Remaining_quantity =
+              Number(product.Remaining_quantity) -
+              Number(orderProduct.quantity);
+
+            await product.save();
+          }
 
           for (const product of updatedBooking.products) {
             let IsEmail = mailOptions.find((data) => {
