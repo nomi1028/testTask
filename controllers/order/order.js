@@ -108,14 +108,65 @@ exports.addOrder = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
+
 exports.getallOrder = async (req, res) => {
   try {
-    let orderList = await Order.find({ status: "checkedOut" }).populate([
-      { path: "customer_id" },
+    let orderList = await Order.aggregate([
+      { $match: { status: "checkedOut" } },
       {
-        path: "products.product_id",
-        // select: "name price", // Select only specific fields to populate
-        populate: { path: "manager_id" },
+        $lookup: {
+          from: "products",
+          localField: "products.product_id",
+          foreignField: "_id",
+          as: "products.product",
+        },
+      },
+      { $unwind: "$products" },
+      { $unwind: "$products.product" },
+      {
+        $lookup: {
+          from: "feedbacks",
+          let: { productId: "$products.product._id", orderId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$product", "$$productId"] },
+                    { $eq: ["$order_id", "$$orderId"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "products.feedback",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "products.product.manager_id",
+          foreignField: "_id",
+          as: "products.product.manager_id",
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          customer_id: { $first: "$customer_id" },
+          products: { $push: "$products" },
+          status: { $first: "$status" },
+          address: { $first: "$address" },
+          deleted: { $first: "$deleted" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "customer_id",
+          foreignField: "_id",
+          as: "customer_id",
+        },
       },
     ]);
 
@@ -125,6 +176,7 @@ exports.getallOrder = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
+
 exports.getallOrderofMananger = async (req, res) => {
   try {
     const managerId = req.params.id.toString(); // Assuming you pass the managerId as a parameter

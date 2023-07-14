@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const Feedback = require("./Feedback");
 const ProductSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -44,5 +44,12 @@ const ProductSchema = new mongoose.Schema({
   },
   deleted: { type: Boolean, default: false },
 });
+ProductSchema.virtual("feedback", {
+  ref: Feedback,
+  foreignField: "product",
+  localField: "_id",
+});
 
+ProductSchema.set("toObject", { virtuals: true });
+ProductSchema.set("toJSON", { virtuals: true });
 module.exports = mongoose.model("product", ProductSchema);
